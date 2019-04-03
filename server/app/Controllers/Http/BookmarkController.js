@@ -102,7 +102,7 @@ class BookmarkController {
 
   async listBookmarksByTag ({ params, request, response }) {
     try {
-      let tagName = params.tagName
+      let tagName = decodeURI(params.tagName)
 
       const page = params.page ? params.page : 1
       const bookmarks = await Bookmark.query().select('bookmarks.*')
@@ -169,7 +169,7 @@ class BookmarkController {
 
   async myListBookmarksByTag ({ auth, params, request, response }) {
     try {
-      let tagName = params.tagName
+      let tagName = decodeURI(params.tagName)
 
       const page = params.page ? params.page : 1
       const bookmarks = await Bookmark.query().select('bookmarks.*')

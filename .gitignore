@@ -21,3 +21,5 @@ server/.env
 
 # The development sqlite file
 server/database/development.sqlite
+
+server/database/adonis.sqlite
