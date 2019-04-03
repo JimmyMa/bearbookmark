@@ -41,6 +41,9 @@ module.exports = {
           exclude: /(node_modules)/
         })
       }
+    },
+    optimization: {
+      minimize: false
     }
   },
 
@@ -89,7 +92,7 @@ module.exports = {
   modules: ['@nuxtjs/axios', '@nuxtjs/auth'],
 
   axios: {
-    baseURL: 'http://127.0.0.1:3333/api'
+    baseURL: 'https://bearbm.54coder.com.cn/api'
   },
 
   auth: {
