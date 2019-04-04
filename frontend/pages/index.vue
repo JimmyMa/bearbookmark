@@ -2,16 +2,16 @@
 
   <section class="container">
     <div class="columns">
-      <div class="column is-3" id="sidebar">
+      <div class="column is-3 sidebar" id="sidebar">
         <a class="button is-primary is-block is-alt is-large" href="#" v-on:click="addBookmark">添加书签</a>
         <aside class="menu">
-          <nuxt-link class="navbar-item" :to="allTagsLink()">Tags  (全部)</nuxt-link>
+          <nuxt-link class="navbar-item" :to="allTagsLink">Tags  (全部)</nuxt-link>
           <Tags :tags="tags"></Tags>
         </aside>
       </div>
       <div class="column is-9">
         <div class="box content"  id="bookmarks">
-          <Bookmark v-for="bookmark in bookmarks" :key="bookmark.id" :bookmark="bookmark"/>
+          <Bookmark v-for="bookmark in bookmarks" :key="bookmark.id" :bookmark="bookmark" :refresh="refresh" :deleteBookmark='showDeleteDialog' :updateBookmark="updateBookmark"/>
           <div class="has-text-centered" id="loader">
             {{loadingMessage}}
           </div>  
@@ -19,7 +19,9 @@
       </div>
     </div>
 
-    <NewBookmark :status="newBookmarkStatus" :success="refresh"/>
+    <NewBookmark :status="newBookmarkStatus" :success="refresh" :bookmark="bookmark"/>
+    <Dialog :status="deleteDialogStatus" :title="'确认'" :message="'确定删除吗？'" :confirmFunc="doDeleteBookmark"/>
+
   </section>
 
 </template>
@@ -28,22 +30,35 @@
 import Tags from '~/components/Tags';
 import Bookmark from '~/components/Bookmark';
 import NewBookmark from '~/components/NewBookmark';
+import Dialog from '~/components/Dialog';
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   components: {
     Tags,
     Bookmark,
-    NewBookmark
+    NewBookmark,
+    Dialog
   },
 
   computed: {
     ...mapGetters(['isAuthenticated', 'loggedInUser', 'my']),
+
+    allTagsLink() {
+      return this.my === '' ? '/' : '/my/'
+    },
   },
 
   data() {
     return {
-      newBookmarkStatus: {isActive: false},
+      newBookmarkStatus: {isActive: false, operation: 'new'},
+      bookmark: { 
+          url: "",
+          public: true,
+          tags: []
+        },
+      deleteDialogStatus: {isActive: false},
+      deleteBookmark: null,
       selectedTag: null,
       loadingMessage: "",
       pagination: {
@@ -63,21 +78,15 @@ export default {
     store.commit('setCurrentActiveMenu', currentActiveMenu)
 
     let queryUrl = 'bookmarks'
-    let {tagName, pageIndex} = params
+    let {tagName} = params
     console.log(tagName)
     if (tagName) {
       queryUrl = 'bookmarks/tag/' + tagName
     }
 
-    let url = queryUrl
-
-    if (pageIndex) {
-      url = queryUrl + "?page=" + pageIndex
-    }
-
     let [tagsRes, bookmarksRes] = await Promise.all([
       app.$axios.get(my + 'tags'),
-      app.$axios.get(my + url),
+      app.$axios.get(my + queryUrl),
     ])
     return {
        tags: tagsRes.data.data,
@@ -117,18 +126,39 @@ export default {
   methods: {
     addBookmark() {
       if (this.isAuthenticated) {
-        this.newBookmarkStatus.isActive=true
+        this.bookmark = { 
+          url: "",
+          public: true,
+          tags: []
+        },
+        this.newBookmarkStatus = {
+          isActive: true,
+          operation: 'new'
+        }
       } else {
         this.$router.push({path: "/login"})
       }
     },
 
-    allTagsLink() {
-      return this.my === '' ? '' : '/my/'
+    updateBookmark(bookmark) {
+      if (this.isAuthenticated) {
+        this.bookmark = {
+            id: bookmark.id,
+            url: bookmark.url,
+            public: bookmark.public,
+            tags: bookmark.tags.map( (tag) => { return tag.name})
+          },
+        this.newBookmarkStatus = {
+          isActive: true,
+          operation: 'update'
+        }
+      } else {
+        this.$router.push({path: "/login"})
+      }
     },
 
-    async onTagClicked(tag) {
-      this.$router.push({path: "/tag/" + tag + "/1"})
+    onTagClicked(tag) {
+      this.$router.push({path: "/tag/" + tag})
     },
 
     async refresh() {
@@ -153,6 +183,17 @@ export default {
 
     },
 
+    showDeleteDialog(bookmark) {
+      this.deleteBookmark = bookmark
+      this.deleteDialogStatus.isActive = true
+    },
+
+    async doDeleteBookmark() {
+      await this.$axios.delete( 'bookmark/' + this.deleteBookmark.id)
+      this.deleteDialogStatus.isActive = false
+      this.refresh()
+    },
+
     async loadingMore() {
       try {
         let bookmarksRes = await this.$axios.get(this.my + this.queryUrl + "/" + (1 + this.pagination.page))
@@ -172,4 +213,10 @@ export default {
   },
 };
 </script>
+
+<style>
+.sidebar {
+  background-color: #F2F6FA;
+}
+</style>
 

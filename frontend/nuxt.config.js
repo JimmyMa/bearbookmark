@@ -18,6 +18,10 @@ module.exports = {
       {
         rel: 'stylesheet',
         href: '/css/main.css'
+      },
+      {
+        rel: 'stylesheet',
+        href: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css'
       }
     ]
   },
@@ -51,31 +55,19 @@ module.exports = {
     extendRoutes (routes, resolve) {
       routes.push({
         name: 'tag',
-        path: '/tag/:tagName/:pageIndex',
+        path: '/tag/:tagName',
         component: resolve(__dirname, 'pages/index.vue')
-      })
-      
-      routes.push({
-        name: 'bookmark',
-        path: '/bookmark/:pageIndex',
-        component: resolve(__dirname, 'pages/index.vue')
-      })
+      }),
 
       routes.push({
         name: 'myBookmark',
         path: '/my',
         component: resolve(__dirname, 'pages/index.vue')
-      })
+      }),
 
       routes.push({
         name: 'myTag',
-        path: '/my/tag/:tagName/:pageIndex',
-        component: resolve(__dirname, 'pages/index.vue')
-      })
-      
-      routes.push({
-        name: 'myBookmark',
-        path: '/my/bookmark/:pageIndex',
+        path: '/my/tag/:tagName',
         component: resolve(__dirname, 'pages/index.vue')
       })
 
@@ -92,7 +84,8 @@ module.exports = {
   modules: ['@nuxtjs/axios', '@nuxtjs/auth'],
 
   axios: {
-    baseURL: 'https://bearbm.54coder.com.cn/api'
+    // baseURL: 'https://bearbm.54coder.com.cn/api'
+    baseURL: 'http://127.0.0.1:3333/api'
   },
 
   auth: {

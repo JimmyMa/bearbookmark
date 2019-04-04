@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     tagLink(tagName) {
-      return this.my === '' ? "/tag/" + tagName + "/1" : "/" + this.my + "tag/" + tagName + "/1"
+      return this.my === '' ? "/tag/" + tagName : "/" + this.my + "tag/" + tagName
     }
   }
 };

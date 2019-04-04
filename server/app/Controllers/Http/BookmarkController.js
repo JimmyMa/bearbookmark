@@ -30,7 +30,6 @@ class BookmarkController {
 
       const bookmark = await Bookmark.create(bookmarkData)
 
-
       if (newBookmarkData.tags != null) {
         for(let tagIndex in newBookmarkData.tags) {
           let tagName = newBookmarkData.tags[tagIndex]
@@ -74,6 +73,127 @@ class BookmarkController {
       return response.status(400).json({
         status: 'error',
         message: 'There was a problem creating the user, please try again later.'
+      })
+    }
+  }
+
+  async update ({ params, request, auth, response }) {
+    const bookmarkData = request.only(['url', 'tags', 'public'])
+
+    var trx = null
+
+    try {
+      let bookmark = await Bookmark.find(params.id)
+
+      if (bookmark.user_id != auth.user.id) {
+        return response.status(401).json({
+          status: 'error',
+          message: 'You don\'t have authority to update this bookmark'
+        })
+      }
+
+      const article = await read(bookmarkData.url, {output: 'text'})
+
+      bookmark.url = bookmarkData.url
+      bookmark.public = bookmarkData.public
+      bookmark.title = article.title
+      bookmark.excerpt = article.content != null ? article.content.substring(0, 255) : ""
+      
+      let tags = await bookmark.tags().fetch()
+      tags = tags.toJSON()
+
+      trx = await Database.beginTransaction()
+
+      bookmark.save()
+
+      if (bookmarkData.tags != null) {
+        for(let tagIndex in bookmarkData.tags) {
+          let tagName = bookmarkData.tags[tagIndex]
+
+          let foundTag = tags.filter((e) => {
+            return e.name === tagName
+          })
+
+          if (foundTag.length > 0) {
+            tags = tags.filter((e) => {
+              return e.name != tagName
+            })
+            continue;
+          }
+
+          let tagData = {
+            name: tagName
+          }
+          let tag = await Tag.findOrCreate(tagData, tagData)
+
+          tag.bookmarks_num = tag.bookmarks_num + 1
+          await tag.save()
+
+          let bookmarkTagData = {
+            bookmark_id: bookmark.id,
+            tag_id: tag.id
+          }
+          let bookmarkTag = await BookmarkTag.create(bookmarkTagData)
+
+          let userTagData = {
+            user_id: auth.user.id,
+            tag_id: tag.id
+          }
+
+          let userTage = await UserTag.findOrCreate(userTagData, userTagData)
+          userTage.bookmarks_num = userTage.bookmarks_num + 1
+          await userTage.save()
+        }
+
+        for(let tagIndex in tags) {
+          let tag = tags[tagIndex]
+          await Database
+            .table('bookmark_tags')
+            .where('tag_id', tag.id)
+            .where('bookmark_id', params.id)
+            .delete()
+        }
+      }
+
+      trx.commit()
+
+      return response.json({
+        status: 'success'
+      })
+    } catch (error) {
+      if (trx != null) {
+        await trx.rollback()
+      }
+      
+      console.debug(error)
+      return response.status(400).json({
+        status: 'error',
+        message: 'There was a problem updating the bookmark, please try again later.'
+      })
+    }
+  }
+
+  async delete ({ params, request, auth, response }) {
+    try {
+      let bookmark = await Bookmark.find(params.id)
+
+      if (bookmark.user_id != auth.user.id) {
+        return response.status(401).json({
+          status: 'error',
+          message: 'You don\'t have authority to delete this bookmark'
+        })
+      }
+
+      bookmark.delete()
+
+      return response.json({
+        status: 'success'
+      })
+    } catch (error) {
+      console.debug(error)
+      return response.status(400).json({
+        status: 'error',
+        message: 'There was a problem creating the bookmark, please try again later.'
       })
     }
   }

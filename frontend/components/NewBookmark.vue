@@ -17,7 +17,7 @@
           <div class="field-body">
             <div class="field">
               <div class="control">
-                <input v-model="url" class="input" type="text" placeholder="请输入网址">
+                <input ref="urlInput" v-model="bookmark.url" class="input" type="text" placeholder="请输入网址">
               </div>
             </div>
           </div>
@@ -30,10 +30,10 @@
           <div class="field-body">
             <div class="field">
               <div class="control">
-                <input v-model="tag" v-on:keyup.enter="addTag" class="input" type="text" placeholder="输入标签后请按回车">
+                <input v-model="tag" v-on:keyup.enter="addTag" class="input" type="text" placeholder="输入标签后请按回车, 直接回车则保存">
                 
                 <div class="tags" style="padding-top: 10px">
-                  <span v-for="tag in tags" :key="tag.id" class="tag is-primary">
+                  <span v-for="tag in bookmark.tags" :key="tag.id" class="tag is-primary">
                     {{tag}}
                     <button class="delete is-small" v-on:click="deleteTag(tag)"></button>
                   </span>
@@ -51,7 +51,7 @@
           <div class="field-body">
             <div class="field">
               <div class="control">
-                <input v-model="isPublic" type="checkbox">
+                <input v-model="bookmark.public" type="checkbox">
               </div>
             </div>
           </div>
@@ -77,11 +77,25 @@ export default {
     status: {
       type: Object,
       default: function () {
-        return { isActive: false }
+        return { 
+          isActive: false,
+          operation: 'new' 
+        }
       }
     },
     success: {
       type: Function
+    },
+    bookmark: {
+      type: Object,
+      default: function () {
+        return { 
+          id: 0,
+          url: "",
+          public: true,
+          tags: []
+        }
+      }
     }
   },
 
@@ -89,31 +103,39 @@ export default {
     return {
       error: null,
       tag: "",
-      url: "",
-      isPublic: true,
-      tags: [],
       saving: false
     }
   },
 
+  watch: {
+    status: function (val) {
+      if (val.isActive) {
+        this.$nextTick(()=>{
+          this.$refs.urlInput.focus()
+        })
+      }
+    },
+  },
+
   methods: {
     async addBookmark() {
-      if (this.url.length == 0) {
+      if (this.bookmark.url.length == 0) {
         this.error = '请输入网址！'
         return
       }
-      if (this.tags.length == 0) {
+      if (this.bookmark.tags.length == 0) {
         this.error = '请输入标签！'
         return
       }
       this.saving = true
-      await this.$axios.post( 'bookmark/create', {
-        url: this.url,
-        tags: this.tags,
-        public: this.isPublic
-      })
-      this.url = ""
-      this.tags = []
+      if (this.status.operation === 'new') {
+        await this.$axios.post( 'bookmark', this.bookmark)
+      } else {
+        await this.$axios.put( 'bookmark/' + this.bookmark.id, this.bookmark)
+      }
+      
+      // this.url = ""
+      // this.tags = []
       this.saving = false
       this.status.isActive = false
       this.success()
@@ -121,23 +143,24 @@ export default {
 
     addTag() {
       if (this.tag.length == 0) {
+        this.addBookmark()
         return;
       }
       let _this = this
 
-      let existedTag = this.tags.filter(function(value, index, arr){
+      let existedTag = this.bookmark.tags.filter(function(value, index, arr){
         return value === _this.tag;
       });
 
       if (existedTag.length == 0) {
-        this.tags.push(this.tag)
+        this.bookmark.tags.push(this.tag)
       }
 
       this.tag = ""
     },
 
     deleteTag(tag) {
-      this.tags = this.tags.filter(function(value, index, arr){
+      this.bookmark.tags = this.bookmark.tags.filter(function(value, index, arr){
             return value !== tag;
         });
     }

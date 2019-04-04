@@ -7,7 +7,11 @@ Route.group(() => {
   Route.post('register', 'AuthenticationController.register')
   Route.get('me', 'AuthenticationController.me').middleware(['auth'])
   Route.put('change_password', 'AuthenticationController.changePassword').middleware(['auth'])
-  Route.post('bookmark/create', 'BookmarkController.create').middleware(['auth'])
+
+  Route.post('bookmark', 'BookmarkController.create').middleware(['auth'])
+  Route.put('bookmark/:id', 'BookmarkController.update').middleware(['auth'])
+  Route.delete('bookmark/:id', 'BookmarkController.delete').middleware(['auth'])
+
   Route.get('bookmarks/:page?', 'BookmarkController.list')
   Route.get('tags', 'BookmarkController.listTags')
   Route.get('bookmarks/tag/:tagName/:page?', 'BookmarkController.listBookmarksByTag')

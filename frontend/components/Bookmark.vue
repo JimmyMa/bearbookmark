@@ -1,6 +1,6 @@
 <template>
 
-  <article class="media">
+  <article class="media" @mouseover="showEdit = true" @mouseleave="showEdit = false">
     <!-- <div class="media-left image is-128x128">
       <img src="https://via.placeholder.com/250">
     </div> -->
@@ -18,7 +18,7 @@
           <Tags :tags="bookmark.tags"/>
 
       </div>
-      <nav class="level is-mobile">
+      <!-- <nav class="level is-mobile">
         <div class="level-left">
           <a class="level-item">
             <span class="icon is-small"><i class="fas fa-reply"></i></span>
@@ -30,10 +30,17 @@
             <span class="icon is-small"><i class="fas fa-heart"></i></span>
           </a>
         </div>
-      </nav>
+      </nav> -->
     </div>
     <div class="media-right">
-      <!-- <button class="delete"></button> -->
+      <div v-if="this.my !== '' && showEdit">
+        <span class="icon" @click="deleteBookmark(bookmark)"> <i class="fa fa-trash"></i> </span>
+        <br>
+        <span class="icon" @click="updateBookmark(bookmark)"> <i class="fa fa-edit"></i> </span>
+        <!-- <button class="delete" @click="deleteBookmark(bookmark)"></button>
+        <br>
+        <button class="edit" @click="updateBookmark(bookmark)"></button> -->
+      </div>
     </div>
   </article>
 
@@ -46,13 +53,22 @@ import { mapGetters } from 'vuex';
 
 export default {
   name: 'Bookmark',
-  props: ['bookmark'],
+  props: ['bookmark', 'updateBookmark', 'deleteBookmark', 'refresh'],
   computed: {
     ...mapGetters(['my']),
+  },
+  data() {
+    return {
+      showEdit: false
+    }
   },
   components: {
     Tags
   },
+
+  methods: {
+
+  }
 };
 </script>
 
