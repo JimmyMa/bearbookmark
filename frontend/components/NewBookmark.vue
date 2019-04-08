@@ -3,7 +3,7 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">添加书签</p>
+        <p class="modal-card-title">{{title}}</p>
         <button class="delete" aria-label="close" v-on:click="status.isActive=false"></button>
       </header>
       <section class="modal-card-body">
@@ -103,7 +103,8 @@ export default {
     return {
       error: null,
       tag: "",
-      saving: false
+      saving: false,
+      title: ""
     }
   },
 
@@ -114,7 +115,8 @@ export default {
           this.$refs.urlInput.focus()
         })
       }
-    },
+      this.title = (val.operation === 'new' ? '添加书签' : "修改书签")
+    }
   },
 
   methods: {

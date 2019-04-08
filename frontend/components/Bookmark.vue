@@ -15,8 +15,15 @@
             @{{bookmark.user.username}}
             {{bookmark.created_at}}
           </div>
-          <Tags :tags="bookmark.tags"/>
-
+          <div class="columns is-gapless is-marginless">
+            <div class="column">
+              <Tags :tags="bookmark.tags"/>
+            </div>
+            <div class="column is-one-quarter" v-if="this.my !== '' && showEdit">
+              <a class="icon is-pulled-right" style="margin-left: 5px;" @click="deleteBookmark(bookmark)"><img src="/images/delete.png"/></a>
+              <a class="icon is-pulled-right" @click="updateBookmark(bookmark)"><img src="/images/edit.png"/></a>
+            </div>
+          </div>
       </div>
       <!-- <nav class="level is-mobile">
         <div class="level-left">
@@ -32,16 +39,13 @@
         </div>
       </nav> -->
     </div>
-    <div class="media-right">
+    <!-- <div class="media-right">
       <div v-if="this.my !== '' && showEdit">
         <span class="icon" @click="deleteBookmark(bookmark)"> <i class="fa fa-trash"></i> </span>
         <br>
         <span class="icon" @click="updateBookmark(bookmark)"> <i class="fa fa-edit"></i> </span>
-        <!-- <button class="delete" @click="deleteBookmark(bookmark)"></button>
-        <br>
-        <button class="edit" @click="updateBookmark(bookmark)"></button> -->
       </div>
-    </div>
+    </div> -->
   </article>
 
 
