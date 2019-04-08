@@ -23,6 +23,9 @@ module.exports = {
         rel: 'stylesheet',
         href: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css'
       }
+    ],
+    script: [
+      { src: 'https://hm.baidu.com/hm.js?a92174327f4cb9864866e9003277747e' }
     ]
   },
   /*
@@ -76,10 +79,13 @@ module.exports = {
     }
   },
 
-  plugins: [{
-    src: '~plugins/vue-scrollmagic.js',
-    ssr: false
-  }],
+  plugins: [
+    {
+      src: '~plugins/vue-scrollmagic.js',
+      ssr: false
+    },
+    {src: '~/plugins/baidu-tongji.js'}
+  ],
 
   modules: ['@nuxtjs/axios', '@nuxtjs/auth'],
 
