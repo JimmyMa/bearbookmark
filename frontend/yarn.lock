@@ -3351,11 +3351,6 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6
   resolved "http://registry.npm.taobao.org/graceful-fs/download/graceful-fs-4.1.15.tgz#ffb703e1066e8a0eeaa4c8b80ba9253eeefbfb00"
   integrity sha1-/7cD4QZuig7qpMi4C6klPu77+wA=
 
-gsap@^2.0.2:
-  version "2.1.2"
-  resolved "http://registry.npm.taobao.org/gsap/download/gsap-2.1.2.tgz#2ad017608f883379e546d8bcc3046182083d4da2"
-  integrity sha1-KtAXYI+IM3nlRti8wwRhggg9TaI=
-
 gzip-size@^5.0.0:
   version "5.0.0"
   resolved "http://registry.npm.taobao.org/gzip-size/download/gzip-size-5.0.0.tgz#a55ecd99222f4c48fd8c01c625ce3b349d0a0e80"
@@ -7025,15 +7020,6 @@ vue-router@^3.0.2:
   resolved "http://registry.npm.taobao.org/vue-router/download/vue-router-3.0.2.tgz#dedc67afe6c4e2bc25682c8b1c2a8c0d7c7e56be"
   integrity sha1-3txnr+bE4rwlaCyLHCqMDXx+Vr4=
 
-vue-scrollmagic@^1.1.0:
-  version "1.1.0"
-  resolved "http://registry.npm.taobao.org/vue-scrollmagic/download/vue-scrollmagic-1.1.0.tgz#55802e5d3b8f99731c3bfa9d699ebdac86f75d98"
-  integrity sha1-VYAuXTuPmXMcO/qdaZ69rIb3XZg=
-  dependencies:
-    gsap "^2.0.2"
-    scrollmagic "^2.0.6"
-    vue "^2.5.17"
-
 vue-server-renderer@^2.6.10:
   version "2.6.10"
   resolved "http://registry.npm.taobao.org/vue-server-renderer/download/vue-server-renderer-2.6.10.tgz#cb2558842ead360ae2ec1f3719b75564a805b375"
@@ -7069,7 +7055,7 @@ vue-template-es2015-compiler@^1.9.0:
   resolved "http://registry.npm.taobao.org/vue-template-es2015-compiler/download/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha1-HuO8mhbsv1EYvjNLsV+cRvgvWCU=
 
-vue@^2.5.17, vue@^2.6.10:
+vue@^2.6.10:
   version "2.6.10"
   resolved "http://registry.npm.taobao.org/vue/download/vue-2.6.10.tgz?cache=0&other_urls=http%3A%2F%2Fregistry.npm.taobao.org%2Fvue%2Fdownload%2Fvue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
   integrity sha1-pysaQqTYKnIepDjRtr9V5mGVxjc=

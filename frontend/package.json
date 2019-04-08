@@ -16,7 +16,7 @@
     "@nuxtjs/auth": "^4.5.1",
     "@nuxtjs/axios": "^5.4.1",
     "nuxt": "^2.5.0",
-    "vue-scrollmagic": "^1.1.0"
+    "scrollmagic": "^2.0.6"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.0",

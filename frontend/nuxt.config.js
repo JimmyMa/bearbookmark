@@ -36,6 +36,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
+    // analyze: true,
     /*
     ** Run ESLint on save
     */
@@ -50,7 +51,7 @@ module.exports = {
       }
     },
     optimization: {
-      minimize: false
+      minimize: true
     }
   },
 
@@ -90,8 +91,8 @@ module.exports = {
   modules: ['@nuxtjs/axios', '@nuxtjs/auth'],
 
   axios: {
-    baseURL: 'https://bearbm.54coder.com.cn/api'
-    // baseURL: 'http://127.0.0.1:3333/api'
+    // baseURL: 'https://bearbm.54coder.com.cn/api'
+    baseURL: 'http://127.0.0.1:3333/api'
   },
 
   auth: {
