@@ -69,5 +69,5 @@ a:hover, a:visited, a:link, a:active
 }
 
 #sidebar {
-  z-index: 1000;
+  z-index: 40;
 }
