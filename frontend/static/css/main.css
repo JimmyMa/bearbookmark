@@ -59,3 +59,15 @@ a:hover, a:visited, a:link, a:active
 {
     text-decoration: none!important;;
 }
+
+.icon {
+  width: 15px;
+}
+
+.card-content {
+  padding: 0.5rem;
+}
+
+#sidebar {
+  z-index: 1000;
+}

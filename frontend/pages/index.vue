@@ -5,8 +5,8 @@
       <div class="column is-3 sidebar" id="sidebar">
         <a class="button is-primary is-block is-alt is-large" href="#" v-on:click="addBookmark">添加书签</a>
         <aside class="menu">
-          <nuxt-link class="navbar-item" :to="allTagsLink">Tags  (全部)</nuxt-link>
-          <Tags :tags="tags"></Tags>
+          <nuxt-link :to="bookmarksRootPath">Tags  (全部)</nuxt-link>
+          <Tags :tags="tags" :linkRootPath="bookmarksRootPath"></Tags>
         </aside>
       </div>
       <div class="column is-9">
@@ -42,11 +42,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['isAuthenticated', 'loggedInUser', 'my']),
-
-    allTagsLink() {
-      return this.my === '' ? '/' : '/my/'
-    },
+    ...mapGetters(['isAuthenticated', 'loggedInUser', 'bookmarksRootPath', 'tagRootPath']),
   },
 
   data() {
@@ -72,21 +68,18 @@ export default {
 
   async asyncData ({route, store, app, params }) {
 
-    let my = route.path.startsWith('/my/') ? 'my/' : ''
-    let currentActiveMenu = route.path.startsWith('/my/') ? 'my' : 'public'
-    store.commit('setMy', my)
-    store.commit('setCurrentActiveMenu', currentActiveMenu)
+    store.commit('setPath', route.path)
 
-    let queryUrl = 'bookmarks'
+    let queryUrl = store.state.bookmarksRootPath
     let {tagName} = params
-    console.log(tagName)
+
     if (tagName) {
-      queryUrl = 'bookmarks/tag/' + tagName
+      queryUrl = store.state.bookmarksRootPath + '/tag/' + tagName
     }
 
     let [tagsRes, bookmarksRes] = await Promise.all([
-      app.$axios.get(my + 'tags'),
-      app.$axios.get(my + queryUrl),
+      app.$axios.get(store.state.tagRootPath + '/tags'),
+      app.$axios.get(queryUrl),
     ])
     return {
        tags: tagsRes.data.data,
@@ -103,7 +96,8 @@ export default {
 
   mounted() {
     const scene = this.$scrollmagic.scene({
-            offset: 100    // start this scene after scrolling for 50px
+          triggerElement: '#sidebar',
+          triggerHook: 'onLeave'
         }).setPin('#sidebar')
         
     this.$scrollmagic.addScene(scene)
@@ -111,8 +105,8 @@ export default {
     var _this = this
     const loader = this.$scrollmagic.scene({triggerElement: '#loader', triggerHook: 'onEnter'})
         .on('enter', function(e) {
-          console.log(_this.pagination)
-          if (_this.pagination.page === _this.pagination.lastPage) {
+
+          if (_this.pagination.page >= _this.pagination.lastPage) {
             _this.loadingMessage = "没有更多了。"
           } else {
             _this.loadingMessage = "加载中 ..."
@@ -157,15 +151,11 @@ export default {
       }
     },
 
-    onTagClicked(tag) {
-      this.$router.push({path: "/tag/" + tag})
-    },
-
     async refresh() {
       try {
         let [tagsRes, bookmarksRes] = await Promise.all([
-          this.$axios.get(this.my + 'tags'),
-          this.$axios.get(this.my + this.queryUrl),
+          this.$axios.get(this.tagRootPath + "/tags"),
+          this.$axios.get(this.queryUrl),
         ])
         this.tags = tagsRes.data.data
         this.bookmarks = bookmarksRes.data.data.data
@@ -196,7 +186,7 @@ export default {
 
     async loadingMore() {
       try {
-        let bookmarksRes = await this.$axios.get(this.my + this.queryUrl + "/" + (1 + this.pagination.page))
+        let bookmarksRes = await this.$axios.get(this.$route.path + "/" + (1 + this.pagination.page))
         this.bookmarks = this.bookmarks.concat(bookmarksRes.data.data.data)
 
         this.pagination = {

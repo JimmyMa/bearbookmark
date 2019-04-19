@@ -14,9 +14,11 @@
       </div>
 
       <div class="navbar-menu" :class="{ 'is-active': showNav }">
-        <div class="navbar-start" v-if="isAuthenticated">
-          <nuxt-link class="navbar-item" :class="{ 'menu-item-active': currentActiveMenu === 'public' }" to="/">全部</nuxt-link>
-          <nuxt-link class="navbar-item" :class="{ 'menu-item-active': currentActiveMenu === 'my' }" to="/my/">我的</nuxt-link>
+        <div class="navbar-start">
+          <nuxt-link class="navbar-item" :class="{ 'menu-item-active': currentActiveMenu === 'bookmarks' }" to="/">书签</nuxt-link>
+          <nuxt-link class="navbar-item" :class="{ 'menu-item-active': currentActiveMenu === 'flashcards' }" to="/flashcards">Flash Cards</nuxt-link>
+          <nuxt-link v-if="isAuthenticated" class="navbar-item" :class="{ 'menu-item-active': currentActiveMenu === 'mybookmarks' }" to="/my/bookmarks">我的书签</nuxt-link>
+          <nuxt-link v-if="isAuthenticated" class="navbar-item" :class="{ 'menu-item-active': currentActiveMenu === 'myflashcards' }" to="/my/flashcards">我的flashcard</nuxt-link>
         </div>
         <div class="navbar-end">
           <div class="navbar-item has-dropdown is-hoverable" v-if="isAuthenticated">
@@ -56,8 +58,6 @@ export default {
   methods: {
     async logout() {
       await this.$auth.logout();
-      this.$store.commit('setMy', '')
-      this.$store.commit('setCurrentActiveMenu', 'public')
     },
   },
 };

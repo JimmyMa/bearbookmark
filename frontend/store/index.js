@@ -1,6 +1,11 @@
 export const state = () => ({
   currentActiveMenu: '',
-  my: ''
+  tagRootPath: '',
+  bookmarksRootPath: '',
+  flashcardsRootPath: '',
+  path: '',
+
+  flashcardShowBack: true,
 })
 
 export const getters = {
@@ -16,16 +21,57 @@ export const getters = {
     return state.currentActiveMenu
   },
 
-  my(state) {
-    return state.my
+  tagRootPath(state) {
+    return state.tagRootPath
+  },
+
+  bookmarksRootPath(state) {
+    return state.bookmarksRootPath
+  },
+
+  flashcardsRootPath(state) {
+    return state.flashcardsRootPath
+  },
+
+  path(state) {
+    return state.path
+  },
+
+  flashcardShowBack(state) {
+    return state.flashcardShowBack
   }
 }
 
 export const mutations = {
-  setCurrentActiveMenu(state, currentActiveMenu) {
-    state.currentActiveMenu = currentActiveMenu
+
+  toggleFlashcardShowBack(state) {
+    state.flashcardShowBack = !state.flashcardShowBack
   },
-  setMy (state, my) {
-    state.my = my
+
+  setPath (state, path) {
+    if (path.startsWith("/my/")) {
+      state.tagRootPath = "/my"
+    } else {
+      state.tagRootPath = ""
+    }
+    console.log("Paht:" + path)
+    if (path.startsWith("/my/bookmarks")) {
+      state.currentActiveMenu = "mybookmarks"
+      state.bookmarksRootPath = "/my/bookmarks"
+    }
+    if (path.startsWith("/my/flashcards")) {
+      state.currentActiveMenu = "myflashcards"
+      state.flashcardsRootPath = "/my/flashcards"
+    }
+    if (path === "/" || path.startsWith("/bookmarks")) {
+      state.currentActiveMenu = "bookmarks"
+      state.bookmarksRootPath = "/bookmarks"
+    }
+    if (path.startsWith("/flashcards")) {
+      state.currentActiveMenu = "flashcards"
+      state.flashcardsRootPath = "/flashcards"
+    }
+
+    state.path = path
   }
 }

@@ -5,17 +5,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 
 export default {
   name: 'Tags',
-  props: ['tags', 'onTagClicked'],
-  computed: {
-    ...mapGetters(['my']),
-  },
+  props: ['tags', 'linkRootPath'],
   methods: {
     tagLink(tagName) {
-      return this.my === '' ? "/tag/" + tagName : "/" + this.my + "tag/" + tagName
+      return this.linkRootPath + "/tag/" + tagName
     }
   }
 };

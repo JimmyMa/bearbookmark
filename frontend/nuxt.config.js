@@ -54,21 +54,45 @@ module.exports = {
   router: {
     extendRoutes (routes, resolve) {
       routes.push({
-        name: 'tag',
-        path: '/tag/:tagName',
+        name: 'bookmarksByTag',
+        path: '/bookmarks/tag/:tagName',
         component: resolve(__dirname, 'pages/index.vue')
       }),
 
       routes.push({
         name: 'myBookmark',
-        path: '/my',
+        path: '/my/bookmarks',
         component: resolve(__dirname, 'pages/index.vue')
       }),
 
       routes.push({
-        name: 'myTag',
-        path: '/my/tag/:tagName',
+        name: 'myBookmarkByTag',
+        path: '/my/bookmarks/tag/:tagName',
         component: resolve(__dirname, 'pages/index.vue')
+      })
+
+      routes.push({
+        name: 'flashcards',
+        path: '/flashcards',
+        component: resolve(__dirname, 'pages/flashcard.vue')
+      }),
+
+      routes.push({
+        name: 'flashcardsByTag',
+        path: '/flashcards/tag/:tagName',
+        component: resolve(__dirname, 'pages/flashcard.vue')
+      }),
+
+      routes.push({
+        name: 'myflashcards',
+        path: '/my/flashcards',
+        component: resolve(__dirname, 'pages/flashcard.vue')
+      }),
+
+      routes.push({
+        name: 'myflashcardsByTag',
+        path: '/my/flashcards/tag/:tagName',
+        component: resolve(__dirname, 'pages/flashcard.vue')
       })
 
       console.log(routes)

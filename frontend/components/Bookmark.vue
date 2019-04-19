@@ -11,15 +11,15 @@
             <br>
             {{bookmark.excerpt}}
           </a>
-          <div v-if="this.my === ''">
+          <div v-if="this.currentActiveMenu === 'bookmarks'">
             @{{bookmark.user.username}}
             {{bookmark.created_at}}
           </div>
           <div class="columns is-gapless is-marginless">
             <div class="column">
-              <Tags :tags="bookmark.tags"/>
+              <Tags :tags="bookmark.tags" :linkRootPath="bookmarksRootPath"/>
             </div>
-            <div class="column is-one-quarter" v-if="this.my !== '' && showEdit">
+            <div class="column is-one-quarter" v-if="this.currentActiveMenu === 'mybookmarks' && showEdit">
               <a class="icon is-pulled-right" style="margin-left: 5px;" @click="deleteBookmark(bookmark)"><img src="/images/delete.png"/></a>
               <a class="icon is-pulled-right" @click="updateBookmark(bookmark)"><img src="/images/edit.png"/></a>
             </div>
@@ -59,7 +59,7 @@ export default {
   name: 'Bookmark',
   props: ['bookmark', 'updateBookmark', 'deleteBookmark', 'refresh'],
   computed: {
-    ...mapGetters(['my']),
+    ...mapGetters(['currentActiveMenu', 'bookmarksRootPath']),
   },
   data() {
     return {
