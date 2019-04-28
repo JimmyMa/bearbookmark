@@ -39,6 +39,7 @@ import Tags from '~/components/Tags';
 import Flashcard from '~/components/Flashcard';
 import NewFlashcard from '~/components/NewFlashcard';
 import Dialog from '~/components/Dialog';
+import { isMobileDevice } from '~/utils/CommonUtils';
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
@@ -105,12 +106,14 @@ export default {
   },
 
   mounted() {
-    const scene = this.$scrollmagic.scene({
-          triggerElement: '#sidebar',
-          triggerHook: 'onLeave'
-        }).setPin('#sidebar')
-        
-    this.$scrollmagic.addScene(scene)
+    if (!isMobileDevice) {
+      const scene = this.$scrollmagic.scene({
+            triggerElement: '#sidebar',
+            triggerHook: 'onLeave'
+          }).setPin('#sidebar')
+          
+      this.$scrollmagic.addScene(scene)
+    } 
 
     var _this = this
     const loader = this.$scrollmagic.scene({triggerElement: '#loader', triggerHook: 'onEnter'})
