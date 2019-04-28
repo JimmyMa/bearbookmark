@@ -53,6 +53,13 @@ module.exports = {
 
   router: {
     extendRoutes (routes, resolve) {
+
+      routes.push({
+        name: 'bookmarks',
+        path: '/bookmarks',
+        component: resolve(__dirname, 'pages/index.vue')
+      }),
+
       routes.push({
         name: 'bookmarksByTag',
         path: '/bookmarks/tag/:tagName',
