@@ -36,6 +36,9 @@ font-size: 14px;
 height: 3rem;
 line-height: 2.8;
 }
+.media-content {
+    overflow: hidden;
+}
 .media-content p {
 font-size: 14px;
 line-height: 2.3;

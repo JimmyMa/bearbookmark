@@ -31,7 +31,7 @@ import Tags from '~/components/Tags';
 import Bookmark from '~/components/Bookmark';
 import NewBookmark from '~/components/NewBookmark';
 import Dialog from '~/components/Dialog';
-import { isMobileDevice } from '~/utils/CommonUtils';
+// import { isMobileDevice } from '~/utils/CommonUtils';
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
@@ -96,7 +96,7 @@ export default {
   },
 
   mounted() {
-    if (!isMobileDevice) {
+    if (window.innerWidth > 800) {
       const scene = this.$scrollmagic.scene({
             triggerElement: '#sidebar',
             triggerHook: 'onLeave'

@@ -39,7 +39,7 @@ import Tags from '~/components/Tags';
 import Flashcard from '~/components/Flashcard';
 import NewFlashcard from '~/components/NewFlashcard';
 import Dialog from '~/components/Dialog';
-import { isMobileDevice } from '~/utils/CommonUtils';
+// import { isMobileDevice } from '~/utils/CommonUtils';
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
@@ -106,7 +106,7 @@ export default {
   },
 
   mounted() {
-    if (!isMobileDevice) {
+    if (window.innerWidth > 800) {
       const scene = this.$scrollmagic.scene({
             triggerElement: '#sidebar',
             triggerHook: 'onLeave'
