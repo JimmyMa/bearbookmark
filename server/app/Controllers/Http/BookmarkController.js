@@ -9,19 +9,24 @@ const read = require('read-art');
 
 class BookmarkController {
   async create ({ request, auth, response }) {
-    const newBookmarkData = request.only(['url', 'tags', 'public'])
+    const newBookmarkData = request.only(['url', 'title', 'excerpt', 'tags', 'public'])
 
     var trx = null
 
     try {
-      const article = await read(newBookmarkData.url, {output: 'text'})
+      if ( newBookmarkData.title == null || newBookmarkData.title.trim().length == 0) {
+        const article = await read(newBookmarkData.url, {output: 'text'})
+        newBookmarkData.title = article.title;
+        newBookmarkData.excerpt = article.content != null ? article.content.substring(0, 255) : "";
+      }
+      
 
       const bookmarkData = {
         user_id: auth.user.id,
         url: newBookmarkData.url,
         public: newBookmarkData.public,
-        title: article.title,
-        excerpt: article.content != null ? article.content.substring(0, 255) : "",
+        title: newBookmarkData.title,
+        excerpt: newBookmarkData.excerpt
       }
 
       trx = await Database.beginTransaction()
@@ -78,7 +83,7 @@ class BookmarkController {
   }
 
   async update ({ params, request, auth, response }) {
-    const bookmarkData = request.only(['url', 'tags', 'public'])
+    const bookmarkData = request.only(['url', 'title', 'excerpt', 'tags', 'public'])
 
     var trx = null
 
@@ -92,12 +97,16 @@ class BookmarkController {
         })
       }
 
-      const article = await read(bookmarkData.url, {output: 'text'})
+      if ( bookmarkData.title == null || bookmarkData.title.trim().length == 0) {
+        const article = await read(newBookmarkData.url, {output: 'text'})
+        bookmarkData.title = article.title;
+        bookmarkData.excerpt = article.content != null ? article.content.substring(0, 255) : "";
+      }
 
       bookmark.url = bookmarkData.url
       bookmark.public = bookmarkData.public
-      bookmark.title = article.title
-      bookmark.excerpt = article.content != null ? article.content.substring(0, 255) : ""
+      bookmark.title = bookmarkData.title
+      bookmark.excerpt = bookmarkData.excerpt
       
       let tags = await bookmark.tags().fetch()
       tags = tags.toJSON()

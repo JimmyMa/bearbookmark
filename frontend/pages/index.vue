@@ -143,6 +143,8 @@ export default {
             id: bookmark.id,
             url: bookmark.url,
             public: bookmark.public,
+            title: bookmark.title,
+            excerpt: bookmark.excerpt,
             tags: bookmark.tags.map( (tag) => { return tag.name})
           },
         this.newBookmarkStatus = {

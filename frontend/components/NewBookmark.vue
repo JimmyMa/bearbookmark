@@ -46,6 +46,32 @@
 
         <div class="field is-horizontal">
           <div class="field-label is-normal">
+            <label class="label">标题</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <input v-model="bookmark.title" class="input" type="text" placeholder="不填则从网页中自动抓取。">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">摘要</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                 <textarea v-model="bookmark.excerpt" class="textarea" placeholder="不填则从网页中自动抓取。"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
             <label class="label">公开书签</label>
           </div>
           <div class="field-body">
@@ -93,6 +119,8 @@ export default {
           id: 0,
           url: "",
           public: true,
+          title: "",
+          excerpt: "",
           tags: []
         }
       }
